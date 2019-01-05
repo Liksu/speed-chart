@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speed</title>
+</head>
+<body>
+    <div id="speedometer"  style="width: 400px; height: 400px"><span>will be removed</span></div>
+    <div id="rainbowClock" style="width: 400px; height: 400px"></div>
+    <div id="gauge" style="width: 250px; height: 250px"></div>
+    <div id="progressbar" style="width: 250px; height: 250px"></div>
+
+    <script src="samples.js" type="module"></script>
+    <style>
+        div {display: inline-block}
+        #rainbowClock {
+            background-image: linear-gradient(45deg, #cccccc 25%, transparent 25%), linear-gradient(-45deg, #cccccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #cccccc 75%), linear-gradient(-45deg, transparent 75%, #cccccc 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+    </style>
+</body>
+</html>
