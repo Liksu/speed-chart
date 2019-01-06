@@ -1,0 +1,6 @@
+- correct index.js
+- check npm module to works correct
+- samples
+- common settings
+- demo page
+- remove hardcoded styling

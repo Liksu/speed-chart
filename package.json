@@ -1,6 +1,6 @@
 {
   "name": "speed-chart",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Base to create different measure charts easily",
   "main": "index.js",
   "scripts": {
