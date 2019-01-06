@@ -1,0 +1,25 @@
+{
+  "name": "speed-chart",
+  "version": "1.0.0",
+  "description": "Base to create different measure charts easily",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Liksu/speed-chart.git"
+  },
+  "keywords": [
+    "speedometer",
+    "svg",
+    "chart",
+    "gauge"
+  ],
+  "author": "Petro Borshchahivskyi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Liksu/speed-chart/issues"
+  },
+  "homepage": "https://github.com/Liksu/speed-chart#readme"
+}
