@@ -4,3 +4,4 @@
 - common settings
 - demo page
 - remove hardcoded styling
+- use animation frame
