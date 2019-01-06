@@ -1,10 +1,10 @@
-import Speedometer from './src/speedometer.js';
-import Rainbow from "./src/plugins/rainbow.js";
-import RedZone from "./src/plugins/redZone.js";
-import SpeedText from './src/plugins/speed.js';
-import Needle from './src/plugins/needle.js';
-import Arrow from "./src/plugins/arrow.js";
-import Mask from "./src/plugins/mask.js";
+import Speedometer from '../src/speedometer.js';
+import Rainbow from "../src/plugins/rainbow.js";
+import RedZone from "../src/plugins/redZone.js";
+import SpeedText from '../src/plugins/speed.js';
+import Needle from '../src/plugins/needle.js';
+import Arrow from "../src/plugins/arrow.js";
+import Mask from "../src/plugins/mask.js";
 
 Speedometer.register('rainbow', Rainbow);
 Speedometer.register('redZone', RedZone);
@@ -213,4 +213,4 @@ const intervalK = setInterval(() => {
         innerArrow: Math.floor(Math.random() * 101),
         outerArrow: Math.floor(Math.random() * 101)
     };
-}, 5000);
+}, 4000);
