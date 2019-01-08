@@ -11,7 +11,7 @@ const defaultConfig = {
     }
 };
 
-export default class Arrow {
+export default class ArrowPlugin {
     constructor(speedometer, options) {
         const {geometry, alpha} = speedometer.settings;
         this.center = geometry.center;

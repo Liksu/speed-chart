@@ -5,7 +5,7 @@ const defaultConfig = {
     solidColor: null
 };
 
-export default class Rainbow {
+export default class RainbowPlugin {
     constructor(speedometer, options) {
         const {geometry, alpha, colors, construct: {ticks}} = speedometer.settings;
         let max = ticks && ticks.max || alpha.angle;

@@ -1,7 +1,7 @@
 import {sector} from '../utils.js';
 
-export default class RedZone {
-    constructor(speedometer, fromTick) {
+export default class RedZonePlugin {
+    constructor(speedometer, fromTick = 0) {
         const {geometry, alpha, colors, construct: {ticks}} = speedometer.settings;
 
         let max = ticks && ticks.max || alpha.angle;

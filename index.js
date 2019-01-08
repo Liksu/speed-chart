@@ -1,3 +1,3 @@
-import Speedometer from './src/speedometer.js';
+import SpeedChart from './src/speed-chart.js';
 
-export {Speedometer};
+export {SpeedChart};

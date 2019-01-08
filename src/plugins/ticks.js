@@ -1,6 +1,6 @@
 import {tick, polar2cart} from '../utils.js';
 
-export default class Ticks {
+export default class TicksPlugin {
     constructor(speedometer, options) {
         const {geometry, alpha, colors, construct: {ticks}} = speedometer.settings;
 

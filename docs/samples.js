@@ -1,15 +1,17 @@
-import Speedometer from '../src/speedometer.js';
-import Rainbow from "../src/plugins/rainbow.js";
-import RedZone from "../src/plugins/redZone.js";
-import SpeedText from '../src/plugins/speed.js';
-import Needle from '../src/plugins/needle.js';
-import Arrow from "../src/plugins/arrow.js";
-import Mask from "../src/plugins/mask.js";
+import SpeedChart from '../src/speed-chart.js';
+import RainbowPlugin from "../src/plugins/rainbow.js";
+import RedZonePlugin from "../src/plugins/redZone.js";
+import SpeedTextPlugin from '../src/plugins/speed.js';
+import NeedlePlugin from '../src/plugins/needle.js';
+import ArrowPlugin from "../src/plugins/arrow.js";
+import MaskPlugin from "../src/plugins/mask.js";
+import Gauge from "../src/common/gauge.js";
+import Speedometer from "../src/common/speedometer.js";
 
-Speedometer.register('rainbow', Rainbow);
-Speedometer.register('redZone', RedZone);
-Speedometer.register('speed', SpeedText);
-Speedometer.resetPlugins([
+SpeedChart.register('rainbow', RainbowPlugin);
+SpeedChart.register('redZone', RedZonePlugin);
+SpeedChart.register('speed', SpeedTextPlugin);
+SpeedChart.resetPlugins([
     'background',
     'rainbow',
     'redZone',
@@ -18,28 +20,33 @@ Speedometer.resetPlugins([
     'speed',
 ]);
 
+// window.speedometer = new SpeedChart({
+//     selector: '#speedometer',
+//     alpha: 110,
+//     norma: ({construct: {ticks}}) => ticks.max,
+//     construct: {
+//         speed: {text: 'km/h'},
+//         ticks: {
+//             max: 8,
+//             zeroText: 'ready',
+//             innerTicks: {
+//                 count: 9,
+//                 highlight: 5
+//             }
+//         },
+//         redZone: 6.5
+//     },
+// });
+
 window.speedometer = new Speedometer({
-    selector: '#speedometer',
-    alpha: 110,
-    norma: ({construct: {ticks}}) => ticks.max,
-    construct: {
-        ticks: {
-            max: 8,
-            zeroText: 'ready',
-            innerTicks: {
-                count: 9,
-                highlight: 5
-            }
-        },
-        redZone: 6.5
-    },
+    selector: '#speedometer'
 });
 
-Speedometer.register('hours', Needle, 'store only');
-Speedometer.register('minutes', Needle, 'store only');
-Speedometer.register('seconds', Needle, 'store only');
+SpeedChart.register('hours', NeedlePlugin, 'store only');
+SpeedChart.register('minutes', NeedlePlugin, 'store only');
+SpeedChart.register('seconds', NeedlePlugin, 'store only');
 
-window.rainbowClock = new Speedometer({
+window.rainbowClock = new SpeedChart({
     selector: '#rainbowClock',
     alpha: -0,
     plugins: ['rainbow', 'ticks', 'hours', 'minutes', 'seconds'],
@@ -105,10 +112,10 @@ setInterval(() => {
     rainbowClock.tree.find('hours').update(hours / (24 * 60) * 360);
 }, 60);
 
-Speedometer.register('innerArrow', Arrow, 'store only');
-Speedometer.register('outerArrow', Arrow, 'store only');
+SpeedChart.register('innerArrow', ArrowPlugin, 'store only');
+SpeedChart.register('outerArrow', ArrowPlugin, 'store only');
 
-window.gauge = new Speedometer({
+window.gauge = new SpeedChart({
     selector: '#gauge',
     alpha: 180,
     value: 16,
@@ -140,9 +147,17 @@ window.gauge = new Speedometer({
     },
 });
 
-Speedometer.register('mask', Mask, 'store only');
+SpeedChart.register('mask', MaskPlugin, 'store only');
 
-window.progressbar = new Speedometer({
+window.common_gauge = new Gauge(document.getElementById('common-gauge'));
+window.common_gauge.value = 75;
+
+window.test = new SpeedChart();
+// d = document.createElement('div');
+// document.body.appendChild(d);
+// d.appendChild(test.element);
+
+window.progressbar = new SpeedChart({
     selector: '#progressbar',
     alpha: 180,
     value: 64,

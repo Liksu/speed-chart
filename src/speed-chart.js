@@ -3,14 +3,14 @@ import {merge} from './utils.js';
 window.merge = merge;
 
 // default plugins
-import Background from './plugins/background.js'
-import Ticks from './plugins/ticks.js'
-import Needle from './plugins/needle.js'
+import BackgroundPlugin from './plugins/background.js'
+import TicksPlugin from './plugins/ticks.js'
+import NeedlePlugin from './plugins/needle.js'
 
 const knownPlugins = Object.assign(['background', 'ticks', 'needle'], {
-    background: Background,
-    ticks: Ticks,
-    needle: Needle
+    background: BackgroundPlugin,
+    ticks: TicksPlugin,
+    needle: NeedlePlugin
 });
 
 /**
@@ -19,6 +19,7 @@ const knownPlugins = Object.assign(['background', 'ticks', 'needle'], {
  * @property {Element|String} element
  * @property {Object} geometry
  * @property {Number} geometry.maxRadius
+ * @property {Number} geometry.innerRadius
  * @property {Object} geometry.center
  * @property {Number} geometry.center.x
  * @property {Number} geometry.center.y
@@ -53,6 +54,7 @@ const defaultConstruct = {
 const defaultConfig = {
     geometry: {
         margin: 5,
+        innerRadius: 0,
 //        size: {width: 0, height: 0} // will be calculated
     },
     construct: defaultConstruct,
@@ -64,19 +66,20 @@ const defaultConfig = {
 const mainId = 'main';
 
 /**
- * @class Speedometer
+ * @class SpeedChart
  * @property {settings} settings
  * @property {Element} element
  * @property {Object} defaults
  * @property {Number} value
  * @property {Object.<string, number>} values
  */
-export default class Speedometer {
+export default class SpeedChart {
     static get defaults() {
         return {
             config: defaultConfig,
             construct: defaultConstruct,
-            plugins: knownPlugins
+            plugins: knownPlugins,
+            size: {width: 200, height: 200}
         };
     }
 
@@ -87,7 +90,7 @@ export default class Speedometer {
                 if (String(plugin) === plugin) {
                     plugin = {name: plugin};
                 }
-                Speedometer.register(plugin.name, plugin.construct);
+                SpeedChart.register(plugin.name, plugin.construct);
             });
         }
     }
@@ -97,11 +100,7 @@ export default class Speedometer {
         if (constructor) knownPlugins[name] = constructor;
     }
 
-    /**
-     * @param {Element|String|settings} [element]
-     * @param {settings} [settings]
-     */
-    constructor(element, settings) {
+    static fixParameters(element, settings) {
         // if selector passed as element
         if (String(element) === element) element = document.querySelector(element);
 
@@ -121,7 +120,23 @@ export default class Speedometer {
             } else if (settings.selector || settings.element) {
                 element = document.querySelector(settings.selector || settings.element);
             }
+
+            if (!element) {
+                element = document.createDocumentFragment();
+            }
         }
+
+        return {settings, element};
+    }
+
+    /**
+     * @param {Element|String|settings} [element]
+     * @param {settings} [settings]
+     */
+    constructor(element, settings) {
+        const fixed = SpeedChart.fixParameters(element, settings);
+        settings = fixed.settings;
+        element = fixed.element;
 
         settings = merge(defaultConfig, settings);
         Object.assign(this, {settings, element});
@@ -139,7 +154,7 @@ export default class Speedometer {
         const geometry = settings.geometry;
 
         // get dimensions
-        let {width, height} = geometry.size || window.getComputedStyle(this.element);
+        let {width, height} = geometry.size || (this.element instanceof Element ? window.getComputedStyle(this.element) : SpeedChart.defaults.size);
         width = parseFloat(String(width));
         height = parseFloat(String(height));
 
@@ -158,11 +173,15 @@ export default class Speedometer {
 
         // calc center
         if (!geometry.center) geometry.center = {};
-        let {center: {x, y}, maxRadius} = geometry;
+        let {center: {x, y}, maxRadius, innerRadius} = geometry;
         if (x == null) x = Math.floor(width / 2);
         if (y == null) y = Math.floor(height / 2);
-        if (maxRadius == null) maxRadius = Math.min(x, y);
-        Object.assign(geometry, {center: {x, y}, maxRadius});
+        if (maxRadius == null || maxRadius <= 1) maxRadius = Math.min(x, y) * (maxRadius || 1);
+        if (innerRadius != null) {
+            if (Math.abs(innerRadius) < 1) innerRadius = maxRadius * innerRadius;
+            if (innerRadius < 0) innerRadius = maxRadius + innerRadius;
+        }
+        Object.assign(geometry, {center: {x, y}, maxRadius, innerRadius});
 
         // calc arcs
         if (settings.alpha == null) settings.alpha = -0;

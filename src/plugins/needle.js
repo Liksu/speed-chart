@@ -14,7 +14,7 @@ const defaultConfig = {
     width: 5
 };
 
-export default class Needle {
+export default class NeedlePlugin {
     constructor(speedometer, options) {
         const {geometry: {center, maxRadius}, alpha} = speedometer.settings;
         this.center = center;

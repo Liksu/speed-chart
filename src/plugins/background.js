@@ -5,7 +5,7 @@ const defaultConfig = {
     border: true
 };
 
-export default class Background {
+export default class BackgroundPlugin {
     constructor(speedometer, options) {
         const {geometry, alpha, colors} = speedometer.settings;
 

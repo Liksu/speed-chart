@@ -1,0 +1,1 @@
+provides ready configs ang plugins combination 

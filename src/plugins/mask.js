@@ -4,7 +4,7 @@ const defaultConfig = {
     plugins: []
 };
 
-export default class Mask {
+export default class MaskPlugin {
     constructor(speedometer, options, name) {
         const {geometry, alpha, norma} = speedometer.settings;
         this.options = safeMerge(defaultConfig, options);

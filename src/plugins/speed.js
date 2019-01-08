@@ -1,7 +1,7 @@
 import Tree from '../tree.js';
 
-export default class SpeedText {
-    constructor(speedometer, options) {
+export default class SpeedTextPlugin {
+    constructor(speedometer, options = {}) {
         const {center} = speedometer.settings.geometry;
         
         this.subTree = new Tree({
@@ -36,9 +36,9 @@ export default class SpeedText {
                         'text-anchor': 'middle'
                     }
                 },
-                {
+                options.text != null ? {
                     tag: 'text',
-                    val: 'km/h',
+                    val: options.text,
                     opt: {
                         x: center.x,
                         y: center.y + 40,
@@ -48,7 +48,7 @@ export default class SpeedText {
                         'alignment-baseline': 'top',
                         'text-anchor': 'middle'
                     }
-                }
+                } : null
             ]
         });
 

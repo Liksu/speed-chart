@@ -97,6 +97,17 @@ export function sectorPath(cx, cy, degStart, degEnd, innerRadius, outerRadius, o
     };
 }
 
+export function generateSectorPath(settings, opt) {
+    const {geometry, alpha} = settings;
+
+    return sectorPath(
+        geometry.center.x, geometry.center.y,
+        alpha.start, alpha.end,
+        geometry.innerRadius, geometry.maxRadius - geometry.margin,
+        opt
+    );
+}
+
 export function deepCopy(some) {
     // primitives, functions, dates
     if (typeof some !== 'object' || some == null || some instanceof Date) return some;
