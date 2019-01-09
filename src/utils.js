@@ -56,33 +56,48 @@ export function tick(cx, cy, r, deg, length) {
     return {x1, y1, x2, y2};
 }
 
-export function arc(cx, cy, r, degStart, degEnd) {
+function _arc(cx, cy, r, degStart, degEnd, reverse = false) {
     const start = polar2cart(cx, cy, r, degStart - 0.0001);
     const end = polar2cart(cx, cy, r, degEnd + 0.0001);
 
     const largeArc = Number(degEnd - degStart > 180);
-    const sweep = Number(degEnd - degStart < 360);
-    // console.log('arc', {cx, cy, r, degStart, degEnd, largeArc});
-    return ['M', start.x, start.y, 'A', r, r, 0, largeArc, sweep, end.x, end.y].join(' ');
+    let sweep = Number(degEnd - degStart < 360);
+    if (reverse) sweep = 1 - sweep;
+
+    const to = reverse ? start : end;
+
+    return {
+        line: ['A', r, r, 0, largeArc, sweep, to.x, to.y],
+        start,
+        end
+    };
 }
 
-export function sector(cx, cy, degStart, degEnd, innerRadius, outerRadius) {
-    const p2c = polar2cart.bind(null, cx, cy);
+export function arc(cx, cy, r, degStart, degEnd) {
+    const {line, start} = _arc(cx, cy, r, degStart, degEnd);
+    return ['M', start.x, start.y, ...line].join(' ');
+}
 
-    const arcBigStart = p2c(outerRadius, degEnd);
-    const arcBigEnd = p2c(outerRadius, degStart);
-    const arcSmallStart = p2c(innerRadius, degStart);
-    const arcSmallEnd = p2c(innerRadius, degEnd);
+export function sector(cx, cy, degStart, degEnd, innerRadius, outerRadius, linecap = 'butt') {
+    const big = _arc(cx, cy, outerRadius, degStart, degEnd);
+    const small = _arc(cx, cy, innerRadius, degStart, degEnd, true);
 
-    const largeArc = Number(degEnd - degStart > 180);
+    let rightSide = ['L', small.end.x, small.end.y];
+    let leftSide = ['Z'];
+
+    if (linecap === 'round') {
+        const capRadius = (outerRadius - innerRadius) / 2;
+        rightSide = ['A', capRadius, capRadius, 0, 1, 1, small.end.x, small.end.y];
+        leftSide = ['A', capRadius, capRadius, 0, 1, 1, big.start.x, big.start.y];
+    }
 
     return [
-        'M', arcBigStart.x, arcBigStart.y,
-        'A', outerRadius, outerRadius, 0, largeArc, 0, arcBigEnd.x, arcBigEnd.y,
-        'L', arcSmallStart.x, arcSmallStart.y,
-        'A', innerRadius, innerRadius, 0, largeArc, 1, arcSmallEnd.x, arcSmallEnd.y,
-        'Z'
-    ].join(' ')
+        'M', big.start.x, big.start.y,
+        ...big.line,
+        ...rightSide,
+        ...small.line,
+        ...leftSide
+    ].join(' ');
 }
 
 export function sectorPath(cx, cy, degStart, degEnd, innerRadius, outerRadius, opt) {
@@ -91,7 +106,7 @@ export function sectorPath(cx, cy, degStart, degEnd, innerRadius, outerRadius, o
         opt: Object.assign({},
             opt,
             {
-                d: sector(cx, cy, degStart, degEnd, innerRadius, outerRadius)
+                d: sector(cx, cy, degStart, degEnd, innerRadius, outerRadius, opt['stroke-linecap'])
             }
         )
     };

@@ -61,11 +61,11 @@ export default class RainbowPlugin {
                     color = colorShift(startColorRGB, endColorRGB, (shiftDeg - from) / (to - from));
                 }
 
-
-                const arcBigStart = p2c(bigR, nEnd);
+                const shift = 0.001;
+                const arcBigStart = p2c(bigR, nEnd + shift);
                 const arcBigEnd = p2c(bigR, nStart);
                 const arcSmallStart = p2c(smallR, nStart);
-                const arcSmallEnd = p2c(smallR, nEnd);
+                const arcSmallEnd = p2c(smallR, nEnd + shift);
 
                 if (options.opacity != null) {
                     color.a = color[3] = (color.a != null ? color.a : 1) * options.opacity;

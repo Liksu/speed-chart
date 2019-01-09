@@ -8,13 +8,14 @@ export default class Gauge extends SpeedChart {
     static get defaultConfig() {
         return {
             plugins: ['gauge'],
+            // value: 12,
             geometry: {
                 innerRadius: -24
             },
             alpha: 180,
             construct: {
                 gauge: {
-                    cap: 'round'
+                    cap: 'round',
                 }
             }
         }

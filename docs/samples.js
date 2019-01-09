@@ -51,7 +51,7 @@ window.rainbowClock = new SpeedChart({
     alpha: -0,
     plugins: ['rainbow', 'ticks', 'hours', 'minutes', 'seconds'],
     geometry: {
-        innerRadius: 0
+        innerRadius: 7
     },
     construct: {
         ticks: {
