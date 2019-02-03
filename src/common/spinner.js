@@ -8,7 +8,8 @@ const commonConfig = {
     from: 0,
     to: 10,
     run: true,
-    delay: 36,
+    delay: 0,
+    type: 'plain',
 
     plugins: ['gauge'],
     geometry: {
@@ -31,6 +32,10 @@ export default class Spinner extends AnimatedSpeedChart {
     }
 
     step() {
+        this[this.settings.type]();
+    }
+
+    plain() {
         let {from, to} = this.settings;
         this.redraw(to, from);
 
@@ -41,6 +46,11 @@ export default class Spinner extends AnimatedSpeedChart {
         if (to > this.settings.norma.max) to -= this.settings.norma.max;
 
         Object.assign(this.settings, {from, to});
+    }
+
+    stretch() {
+        // just to demonstrate switching of methods
+        this.plain();
     }
 
     redraw(to = this.to, from = this.from) {

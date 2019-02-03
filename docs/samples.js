@@ -233,6 +233,6 @@ const intervalK = setInterval(() => {
 }, 4000);
 
 window.spinner = new Spinner('#common-spinner', {
-    // from: 25,
-    // to: 50
+    to: 21,
+    type: 'stretch'
 });
