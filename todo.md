@@ -9,3 +9,8 @@
 - common settings
 - allow styling from css
 - ready classes implements common settings with color themes
+- fix rainbow clocks background to use canvas and smooth rainbow
+- fix clock hours
+- fix re-creating tree on remake
+- fix double running of commons
+- make norma different for plugins as multiValue

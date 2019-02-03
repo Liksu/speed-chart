@@ -157,3 +157,7 @@ export function safeMerge(base, extra) {
 
     return merge(base, extra);
 }
+
+export function pickFirst(...values) {
+    return values.find(item => item != null);
+}

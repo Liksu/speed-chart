@@ -51,7 +51,7 @@ export default class ArrowPlugin {
         Object.assign(this, subTree);
     }
 
-    update(deg) {
+    update({to: {degree: deg}}) {
         this.arrow._el.setAttributeNS(null, 'transform', `rotate(${deg + this.alpha.start} ${this.center.x} ${this.center.y})`);
     }
 }

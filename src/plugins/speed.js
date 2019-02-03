@@ -55,7 +55,7 @@ export default class SpeedTextPlugin {
         Object.assign(this, this.subTree.tree);
     }
 
-    update(deg) {
+    update({to: {degree: deg}}) {
         this.subTree.find('speedText')._el.innerHTML = Math.floor(deg / 1.3);
         // this.subTree.find('speedText')._el.innerHTML = new Date().toISOString().replace(/^.+T(\d\d:\d\d).+$/, "$1");
     }

@@ -51,7 +51,11 @@ export default class NeedlePlugin {
         Object.assign(this, subTree);
     }
 
-    update(deg) {
-        this.needle._el.setAttributeNS(null, 'transform', `rotate(${deg} ${this.center.x} ${this.center.y})`);
+    updateDegree(degree = 0) {
+        return this.update({to: {degree}});
+    }
+
+    update({to: {degree}}) {
+        this.needle._el.setAttributeNS(null, 'transform', `rotate(${degree} ${this.center.x} ${this.center.y})`);
     }
 }

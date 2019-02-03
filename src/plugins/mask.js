@@ -37,7 +37,7 @@ export default class MaskPlugin {
         Object.assign(this, {geometry, alpha, speedometer, name, norma}, subTree);
     }
 
-    update(deg) {
+    update({to: {degree: deg}}) {
         const d = sector(
             this.geometry.center.x, this.geometry.center.y,
             this.alpha.start, deg + this.alpha.start,

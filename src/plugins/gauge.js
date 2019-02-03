@@ -1,4 +1,4 @@
-import {safeMerge, generateSectorPath, sector} from '../utils.js';
+import {safeMerge, sector} from '../utils.js';
 
 const defaultConfig = {
     color: '#669',
@@ -10,7 +10,6 @@ export default class GaugePlugin {
         this.geometry = speedometer.settings.geometry;
         this.alpha = speedometer.settings.alpha;
         this.options = safeMerge(defaultConfig, options);
-
 
         this.progress = {
             tag: 'path',
@@ -39,17 +38,18 @@ export default class GaugePlugin {
         Object.assign(this, subTree);
     }
 
-    getSector(degree) {
+    getSector(degEnd, degStart = 0) {
         return sector(
             this.geometry.center.x, this.geometry.center.y,
-            this.alpha.start, degree + this.alpha.start,
+            degStart + this.alpha.start, degEnd + this.alpha.start,
             this.geometry.innerRadius, this.geometry.maxRadius - this.geometry.margin,
-            degree && this.options.cap
+            degEnd && this.options.cap
         );
     }
 
-    update(degree, value) {
-        this.progress._el.setAttributeNS(null, 'd', this.getSector(degree));
+    update({to: {degree: degEnd}, from: {degree: degStart}}) {
+        const sector = this.getSector(degEnd, degStart || 0);
+        this.progress._el.setAttributeNS(null, 'd', sector);
     }
 
     afterDraw() {}

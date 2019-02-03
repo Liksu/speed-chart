@@ -1,5 +1,5 @@
 import Tree from './tree.js';
-import {merge} from './utils.js';
+import {merge, pickFirst} from './utils.js';
 window.merge = merge;
 
 // default plugins
@@ -39,6 +39,18 @@ const knownPlugins = Object.assign(['background', 'ticks', 'needle'], {
  * @property {Object.<string, string>} colors
  * @property {Object} construct
  * @property {Array<String>} plugins
+ */
+
+/**
+ * @typedef {Object} updValue
+ * @property {Number} degree
+ * @property {Number} value
+ * @property {Number} boundedValue
+ */
+/**
+ * @typedef {Object} updValues
+ * @property {updValue} from
+ * @property {updValue} to
  */
 
 const defaultConstruct = {
@@ -129,6 +141,10 @@ export default class SpeedChart {
         return {settings, element};
     }
 
+    get commonConfig() {
+        return null;
+    }
+
     /**
      * @param {Element|String|settings} [element]
      * @param {settings} [settings]
@@ -138,12 +154,13 @@ export default class SpeedChart {
         settings = fixed.settings;
         element = fixed.element;
 
+        if (this.commonConfig) settings = merge(this.commonConfig, settings);
         settings = merge(defaultConfig, settings);
         Object.assign(this, {settings, element});
 
         this._value = settings.value != null ? settings.value : 0;
         this._values = {};
-        this.update();
+        this.remake();
     }
 
     /**
@@ -274,7 +291,7 @@ export default class SpeedChart {
      * @public
      * @param {settings} [newSettings]
      */
-    update(newSettings) {
+    remake(newSettings) {
         if (newSettings != null) {
             this.settings = merge(this.settings, newSettings);
         }
@@ -287,6 +304,49 @@ export default class SpeedChart {
             this.values = this._values;
         } else {
             this.value = this._value;
+        }
+    }
+
+    translate(value = this._value) {
+        let boundedValue = value;
+        if (value > this.settings.norma.max) boundedValue = this.settings.norma.max;
+        if (value < this.settings.norma.min) boundedValue = this.settings.norma.min;
+
+        return {
+            degree: boundedValue * this.settings.norma.coefficient,
+            boundedValue,
+            value
+        };
+    }
+
+    /**
+     * @param {number|Array<number>|updValues} newValue - in case of array - [to, from] order
+     * @returns {updValues|null}
+     */
+    makeUpdValue(newValue = 0) {
+        let to = pickFirst(newValue.to, newValue[0], newValue, 0);
+        let from = pickFirst(newValue.from, newValue[1], 0);
+
+        if (to.degree == null) to = this.translate(pickFirst(to.value, to));
+        if (from.degree == null) from = this.translate(pickFirst(from.value, from));
+
+        const updValues = {from, to};
+        if (typeof newValue === 'object' && !(newValue instanceof Array)) Object.assign(newValue, updValues);
+        else newValue = updValues;
+
+        return newValue;
+    }
+
+    /**
+     * @public
+     */
+    update(newValue) {
+        if (newValue == null) return;
+
+        if (this.settings.multiValues) {
+            this.values = newValue;
+        } else {
+            this.value = newValue;
         }
     }
 
@@ -307,12 +367,10 @@ export default class SpeedChart {
         }
 
         this._value = newValue;
-        if (newValue > this.settings.norma.max) newValue = this.settings.norma.max;
-        if (newValue < this.settings.norma.min) newValue = this.settings.norma.min;
+        const updValue = this.makeUpdValue(newValue);
 
-        const degree = newValue * this.settings.norma.coefficient;
         this.tree.find(mainId).sub.forEach(sub => {
-            if (sub.update) sub.update(degree, newValue);
+            if (sub.update) sub.update(updValue);
         });
     }
 
@@ -330,11 +388,11 @@ export default class SpeedChart {
     set values(newValues) {
         Object.entries(newValues).forEach(([key, value]) => {
             this._values[key] = value;
-            if (value > this.settings.norma.max) value = this.settings.norma.max;
-            if (value < this.settings.norma.min) value = this.settings.norma.min;
-            const degree = value * this.settings.norma.coefficient;
             const sub = this.tree.find(key);
-            if (sub && sub.update) sub.update(degree, value);
+            if (sub && sub.update) {
+                const updValue = this.makeUpdValue(value);
+                sub.update(updValue);
+            }
         });
     }
 }

@@ -7,6 +7,7 @@ import ArrowPlugin from "../src/plugins/arrow.js";
 import MaskPlugin from "../src/plugins/mask.js";
 import Gauge from "../src/common/gauge.js";
 import Speedometer from "../src/common/speedometer.js";
+import Spinner from "../src/common/spinner.js";
 
 SpeedChart.register('rainbow', RainbowPlugin);
 SpeedChart.register('redZone', RedZonePlugin);
@@ -49,6 +50,7 @@ SpeedChart.register('seconds', NeedlePlugin, 'store only');
 window.rainbowClock = new SpeedChart({
     selector: '#rainbowClock',
     alpha: -0,
+    multiValues: true,
     plugins: ['rainbow', 'ticks', 'hours', 'minutes', 'seconds'],
     geometry: {
         innerRadius: 7
@@ -103,13 +105,13 @@ window.rainbowClock = new SpeedChart({
 setInterval(() => {
     const now = new Date();
     const seconds = now.getSeconds() * 1000 + now.getMilliseconds();
-    rainbowClock.tree.find('seconds').update(seconds / (60 * 1000) * 360);
+    rainbowClock.tree.find('seconds').updateDegree(seconds / (60 * 1000) * 360);
     const minutes = now.getMinutes() * 60 + now.getSeconds();
-    rainbowClock.tree.find('minutes').update(minutes / (60 * 60) * 360);
+    rainbowClock.tree.find('minutes').updateDegree(minutes / (60 * 60) * 360);
     let hours = now.getHours();
     if (hours >= 12) hours -= 12;
     hours = hours * 12 + now.getMinutes();
-    rainbowClock.tree.find('hours').update(hours / (24 * 60) * 360);
+    rainbowClock.tree.find('hours').updateDegree(hours / (24 * 60) * 360);
 }, 60);
 
 SpeedChart.register('innerArrow', ArrowPlugin, 'store only');
@@ -203,8 +205,8 @@ window.progressbar = new SpeedChart({
                 'alignment-baseline': 'middle',
                 'text-anchor': 'middle'
             },
-            update: function(deg, val) {
-                this._el.innerHTML = val;
+            update: function({to: {value}}) {
+                this._el.innerHTML = value;
             }
         }
     },
@@ -229,3 +231,8 @@ const intervalK = setInterval(() => {
         outerArrow: Math.floor(Math.random() * 101)
     };
 }, 4000);
+
+window.spinner = new Spinner('#common-spinner', {
+    // from: 25,
+    // to: 50
+});

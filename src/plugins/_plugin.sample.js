@@ -14,7 +14,7 @@ export default class Plugin {
         Object.assign(this, subTree);
     }
 
-    update() {}
+    update({to: {degree}}) {}
 
     afterDraw() {}
 }
