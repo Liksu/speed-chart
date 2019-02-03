@@ -1,8 +1,5 @@
-import SpeedChart from "../speed-chart.js";
-
 import GaugePlugin from '../plugins/gauge.js';
-import AnimatedSpeedChart from "./_animated.js";
-SpeedChart.register('gauge', GaugePlugin, 'store only');
+import AnimatedSpeedChart from "../animated-speed-chart.js";
 
 const commonConfig = {
     from: 0,
@@ -11,7 +8,7 @@ const commonConfig = {
     delay: 0,
     type: 'plain',
 
-    plugins: ['gauge'],
+    plugins: [{name: 'gauge', constructor: GaugePlugin}],
     geometry: {
         innerRadius: 22,
         maxRadius: 25,

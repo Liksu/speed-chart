@@ -1,4 +1,4 @@
-import SpeedChart from "../speed-chart.js";
+import SpeedChart from "./speed-chart.js";
 
 export default class AnimatedSpeedChart extends SpeedChart {
     constructor(...params) {

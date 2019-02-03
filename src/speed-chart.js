@@ -250,6 +250,13 @@ export default class SpeedChart {
 
         const plugins = this.settings.plugins || knownPlugins;
         plugins.forEach(pluginName => {
+            if (typeof pluginName === 'object') {
+                let {name, constructor} = pluginName;
+                if (pluginName instanceof Array) [name, constructor] = pluginName;
+                knownPlugins[name] = constructor;
+                pluginName = name;
+            }
+
             delete constructs[pluginName];
             if (this._values[pluginName] == null) {
                 const pluginValue = settings[pluginName] && settings[pluginName].value != null && settings[pluginName].value;
@@ -324,8 +331,8 @@ export default class SpeedChart {
      * @returns {updValues|null}
      */
     makeUpdValue(newValue = 0) {
-        let to = pickFirst(newValue.to, newValue[0], newValue, 0);
-        let from = pickFirst(newValue.from, newValue[1], 0);
+        let to = pickFirst(newValue.to, newValue[0], newValue, this.settings.norma.min, 0);
+        let from = pickFirst(newValue.from, newValue[1], this.settings.norma.min, 0);
 
         if (to.degree == null) to = this.translate(pickFirst(to.value, to));
         if (from.degree == null) from = this.translate(pickFirst(from.value, from));
