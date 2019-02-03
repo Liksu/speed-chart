@@ -22,7 +22,6 @@ export default class AnimatedSpeedChart extends SpeedChart {
      * @abstract
      */
     step() {
-        console.log('step');
         return void 0;
     }
 
