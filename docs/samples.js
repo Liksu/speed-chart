@@ -50,6 +50,7 @@ SpeedChart.register('seconds', NeedlePlugin, 'store only');
 window.rainbowClock = new SpeedChart({
     selector: '#rainbowClock',
     alpha: -0,
+    norma: 60,
     multiValues: true,
     plugins: ['rainbow', 'ticks', 'hours', 'minutes', 'seconds'],
     geometry: {
@@ -104,14 +105,17 @@ window.rainbowClock = new SpeedChart({
 
 setInterval(() => {
     const now = new Date();
-    const seconds = now.getSeconds() * 1000 + now.getMilliseconds();
-    rainbowClock.tree.find('seconds').updateDegree(seconds / (60 * 1000) * 360);
-    const minutes = now.getMinutes() * 60 + now.getSeconds();
-    rainbowClock.tree.find('minutes').updateDegree(minutes / (60 * 60) * 360);
+    const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
+    const minutes = now.getMinutes() + seconds / 60;
     let hours = now.getHours();
     if (hours >= 12) hours -= 12;
-    hours = hours * 12 + now.getMinutes();
-    rainbowClock.tree.find('hours').updateDegree(hours / (24 * 60) * 360);
+    hours = (hours + minutes / 60) * 5;
+
+    rainbowClock.update({
+        seconds,
+        minutes,
+        hours
+    });
 }, 60);
 
 SpeedChart.register('innerArrow', ArrowPlugin, 'store only');
