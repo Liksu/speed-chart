@@ -25,7 +25,7 @@ export default class AnimatedSpeedChart extends SpeedChart {
         return void 0;
     }
 
-    nextStep(timestamp) {
+    nextStep(timestamp = 0) {
         if (this.settings.run) {
             this.animationRequestID = window.requestAnimationFrame(this.nextStep.bind(this));
         } else {
@@ -38,6 +38,6 @@ export default class AnimatedSpeedChart extends SpeedChart {
         }
 
         this.animationLastRunTime = timestamp;
-        this.step();
+        this.step(timestamp);
     }
 }

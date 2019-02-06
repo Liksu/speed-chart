@@ -28,8 +28,8 @@ export default class Spinner extends AnimatedSpeedChart {
         return commonConfig;
     }
 
-    step() {
-        this[this.settings.type]();
+    step(timestamp) {
+        this[this.settings.type](timestamp);
     }
 
     plain() {

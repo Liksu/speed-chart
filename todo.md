@@ -3,13 +3,15 @@
 - samples
 - demo page
 - remove hardcoded styling
-- use animation frame
+- use animation frame (in all animated samples)
 - make web component
 - add docs for all configs
 - common settings
 - allow styling from css
 - ready classes implements common settings with color themes
 - fix rainbow clocks background to use canvas and smooth rainbow
+- change/optimize rainbow to use sectors for gauge cases
 - fix re-creating tree on remake
 - fix double running of commons
 - make norma different for plugins as multiValue
+- installations monitor
