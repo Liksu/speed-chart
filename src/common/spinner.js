@@ -22,7 +22,8 @@ const commonConfig = {
     construct: {
         gauge: {
             bgColor: '#EEE',
-            color: 'lightgreen'
+            color: 'lightgreen',
+            cap: 'round'
         },
         background: {
             back: null,

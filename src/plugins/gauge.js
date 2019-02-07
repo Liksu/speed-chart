@@ -43,7 +43,7 @@ export default class GaugePlugin {
             this.geometry.center.x, this.geometry.center.y,
             degStart + this.alpha.start, degEnd + this.alpha.start,
             this.geometry.innerRadius, this.geometry.maxRadius - this.geometry.margin,
-            degEnd && this.options.cap
+            (degEnd - degStart < 360) && this.options.cap
         );
     }
 

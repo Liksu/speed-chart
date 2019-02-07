@@ -56,7 +56,7 @@ export function tick(cx, cy, r, deg, length) {
     return {x1, y1, x2, y2};
 }
 
-function _arc(cx, cy, r, degStart, degEnd, reverse = false) {
+export function _arc(cx, cy, r, degStart, degEnd, reverse = false) {
     const start = polar2cart(cx, cy, r, degStart - 0.0001);
     const end = polar2cart(cx, cy, r, degEnd + 0.0001);
 
