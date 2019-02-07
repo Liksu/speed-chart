@@ -1,8 +1,8 @@
 import {arc, safeMerge} from '../utils.js';
 
 const defaultConfig = {
-    extra: 3,
-    border: true
+    extra: 3, // degree add to alpha
+    border: true // draw white path inside background (margin)
 };
 
 export default class BackgroundPlugin {
@@ -16,10 +16,10 @@ export default class BackgroundPlugin {
 
         const subTree = [];
 
-        subTree.push({
+        if (options.back) subTree.push({
             tag: 'path',
             opt: {
-                fill: colors.background || 'black',
+                fill: options.back,
                 d: arc(geometry.center.x, geometry.center.y, geometry.maxRadius, alpha.start - options.extra, alpha.end + options.extra)
             }
         });

@@ -1,4 +1,5 @@
 import GaugePlugin from '../plugins/gauge.js';
+import BackgroundPlugin from "../plugins/background.js";
 import AnimatedSpeedChart from "../animated-speed-chart.js";
 
 const commonConfig = {
@@ -8,7 +9,10 @@ const commonConfig = {
     delay: 0,
     type: 'plain',
 
-    plugins: [{name: 'gauge', constructor: GaugePlugin}],
+    plugins: [
+        {name: 'background', constructor: BackgroundPlugin},
+        {name: 'gauge', constructor: GaugePlugin}
+    ],
     geometry: {
         innerRadius: 22,
         maxRadius: 25,
@@ -19,6 +23,10 @@ const commonConfig = {
         gauge: {
             bgColor: '#EEE',
             color: 'lightgreen'
+        },
+        background: {
+            back: null,
+            border: false
         }
     }
 };
