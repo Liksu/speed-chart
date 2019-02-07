@@ -1,7 +1,9 @@
 import SpeedChart from "../speed-chart.js";
 
+const commonConfig = {};
+
 export default class Common extends SpeedChart {
-    static get defaultConfig() {
-        return {};
+    get commonConfig() {
+        return commonConfig;
     }
 }
