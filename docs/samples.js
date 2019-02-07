@@ -8,6 +8,7 @@ import MaskPlugin from "../src/plugins/mask.js";
 import Gauge from "../src/common/gauge.js";
 import Speedometer from "../src/common/speedometer.js";
 import Spinner from "../src/common/spinner.js";
+import ZebraLoader from "../src/common/zebra-loader.js";
 
 SpeedChart.register('rainbow', RainbowPlugin);
 SpeedChart.register('redZone', RedZonePlugin);
@@ -239,4 +240,23 @@ const intervalK = setInterval(() => {
 window.spinner = new Spinner('#common-spinner', {
     to: 21,
     type: 'stretch'
+});
+
+window.zebra = new ZebraLoader('#common-zebra');
+window.zebraBlue = new ZebraLoader('#common-zebra-back', {
+    norma: 16,
+    construct: {
+        zebra: {
+            colors: {
+                activeBorder: 'white',
+                activeBackground: 'white'
+            }
+        },
+        background: {
+            back: '#3128b6',
+            border: false,
+            hole: -10,
+            extra: 0
+        }
+    }
 });
