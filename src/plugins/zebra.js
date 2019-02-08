@@ -67,12 +67,15 @@ export default class Zebra {
             {
                 norma,
                 colors: options.colors,
-                allowMultiple: options.allowMultiple
+                allowMultiple: options.allowMultiple,
+                highlightActive: options.highlightActive
             }
         );
     }
 
     highlight(n = this.active, state = 'active') {
+        if (!this.highlightActive) return;
+
         if (n instanceof Array) {
             n.filter(value => value != null).forEach(value => this.highlight(value, state));
             return;
