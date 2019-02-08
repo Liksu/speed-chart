@@ -17,6 +17,7 @@ const knownPlugins = Object.assign(['background', 'ticks', 'needle'], {
  * @typedef {Object} settings
  * @property {String} selector
  * @property {Element|String} element
+ * @property {Element|String} appendTo
  * @property {Object} geometry
  * @property {Number} geometry.maxRadius
  * @property {Number} geometry.innerRadius
@@ -112,6 +113,25 @@ export default class SpeedChart {
         if (constructor) knownPlugins[name] = constructor;
     }
 
+    /**
+     * @param {Element|String} element
+     * @param {Boolean} allowFragment
+     * @returns {Element}
+     */
+    static getElement(element, allowFragment = true) {
+        // if (element instanceof Element) return element;
+        if (String(element) === element) element = document.querySelector(element);
+        if (!element) {
+            if (allowFragment) element = document.createDocumentFragment();
+            else {
+                const tag = document.createElement('div');
+                tag.className = 'speedchart-container';
+                element = tag;
+            }
+        }
+        return element;
+    }
+
     static fixParameters(element, settings) {
         // if selector passed as element
         if (String(element) === element) element = document.querySelector(element);
@@ -160,7 +180,20 @@ export default class SpeedChart {
 
         this._value = settings.value != null ? settings.value : 0;
         this._values = {};
+
+        this.userSettings = merge({}, settings);
+
         this.remake();
+
+        if (settings.appendTo) {
+            settings.appendTo = SpeedChart.getElement(settings.appendTo, false);
+            if (!(this.element instanceof Element)) {
+                const tag = SpeedChart.getElement(null, false);
+                tag.appendChild(this.element);
+                this.element = tag;
+            }
+            settings.appendTo.appendChild(this.element);
+        }
     }
 
     /**
@@ -300,7 +333,8 @@ export default class SpeedChart {
      */
     remake(newSettings) {
         if (newSettings != null) {
-            this.settings = merge(this.settings, newSettings);
+            this.settings = merge(this.userSettings, newSettings);
+            this.userSettings = merge({}, this.settings); // store updated userSettings
         }
 
         this.init();
@@ -314,6 +348,8 @@ export default class SpeedChart {
         }
 
         if (this.afterRemake) this.afterRemake();
+
+        return this;
     }
 
     translate(value = this._value) {
@@ -357,6 +393,8 @@ export default class SpeedChart {
         } else {
             this.value = newValue;
         }
+
+        return this;
     }
 
     /**

@@ -7,7 +7,7 @@
 - make web component
 - add docs for all configs
 - common settings
-- allow styling from css
+- allow styling from css (use prefixed classes)
 - ready classes implements common settings with color themes
 - fix rainbow clocks background to use canvas and smooth rainbow
 - change/optimize rainbow to use sectors for gauge cases
@@ -15,4 +15,4 @@
 - fix double running of commons
 - make norma different for plugins as multiValue
 - installations monitor
-- allow chart to add itself to passed parent
+- update plugins to use global colors
