@@ -312,6 +312,8 @@ export default class SpeedChart {
         } else {
             this.value = this._value;
         }
+
+        if (this.afterRemake) this.afterRemake();
     }
 
     translate(value = this._value) {
@@ -338,7 +340,7 @@ export default class SpeedChart {
         if (from.degree == null) from = this.translate(pickFirst(from.value, from));
 
         const updValues = {from, to};
-        if (typeof newValue === 'object' && !(newValue instanceof Array)) Object.assign(newValue, updValues);
+        if (typeof newValue === 'object') Object.assign(newValue, updValues);
         else newValue = updValues;
 
         return newValue;

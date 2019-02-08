@@ -243,10 +243,16 @@ window.spinner = new Spinner('#common-spinner', {
 });
 
 window.zebra = new ZebraLoader('#common-zebra');
-window.zebraBlue = new ZebraLoader('#common-zebra-back', {
-    norma: 16,
+window.zebraBlue = new ZebraLoader('#common-zebra-blue', {
+    value: [1, 4, 7, 10, 13],
+    norma: 15,
+    geometry: {
+        margin: 10
+    },
     construct: {
         zebra: {
+            gap: 0.2,
+            allowMultiple: true,
             colors: {
                 activeBorder: 'white',
                 activeBackground: 'white'
@@ -257,6 +263,55 @@ window.zebraBlue = new ZebraLoader('#common-zebra-back', {
             border: false,
             hole: -10,
             extra: 0
+        }
+    }
+});
+window.zebraGreen = new ZebraLoader('#common-zebra-green', {
+    direction: -1,
+    norma: 16,
+    geometry: {
+        margin: 0
+    },
+    construct: {
+        zebra: {
+            gap: 0.5,
+            straightGaps: false,
+            colors: {
+                border: null,
+                activeBorder: null,
+                activeBackground: 'green',
+                5: {border: 'orange', background: 'yellow'},
+                10: {border: 'blue', background: 'lightcyan'},
+            }
+        },
+        background: {
+            back: '#3128b6',
+            border: false,
+            hole: -0,
+            extra: -60
+        }
+    }
+});
+window.zebraTail = new ZebraLoader('#common-zebra-tail', {
+    value: [
+        {value: 1, color: {border: '#ffd200', background: '#ffd200'}},
+        {value: 2, color: {border: '#ffc100', background: '#ffc100'}},
+        {value: 3, color: {border: '#ffb100', background: '#ffb100'}},
+        {value: 4, color: {border: '#ffa000', background: '#ffa000'}},
+    ],
+    norma: 17,
+    geometry: {
+        margin: 0,
+        innerRadius: 0.85
+    },
+    construct: {
+        zebra: {
+            gap: 0.2,
+            allowMultiple: true,
+            colors: {
+                activeBorder: 'navy',
+                activeBackground: 'lightcyan'
+            }
         }
     }
 });

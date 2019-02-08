@@ -15,9 +15,9 @@ export default class BackgroundPlugin {
             back: colors.background || 'black'
         }, options);
 
-        if (options.hole) {
-            if (Math.abs(options.hole) < 1) options.hole *= geometry.innerRadius;
-            if (options.hole < 0) options.hole += geometry.innerRadius;
+        if (options.hole != null) {
+            if (options.hole && Math.abs(options.hole) < 1) options.hole *= geometry.innerRadius;
+            if (options.hole < 0 || Object.is(options.hole, -0)) options.hole += geometry.innerRadius;
         }
 
         const subTree = [];

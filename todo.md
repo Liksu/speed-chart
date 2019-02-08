@@ -15,3 +15,4 @@
 - fix double running of commons
 - make norma different for plugins as multiValue
 - installations monitor
+- allow chart to add itself to passed parent

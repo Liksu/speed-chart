@@ -4,6 +4,8 @@ const defaultConfig = {
     gap: 0.1,
     innerRadius: 0.6,
     highlightActive: true,
+    allowMultiple: false,
+    straightGaps: true,
     border: 1,
     colors: {
         background: 'silver',
@@ -32,10 +34,11 @@ export default class Zebra {
         const L = l * outerRadius;
         const Lsm = l * innerRadius;
         const Lshift = (L - Lsm) / 2;
-        const Rshift = Lshift * 180 / (Math.PI * innerRadius);
+        let Rshift = Lshift * 180 / (Math.PI * innerRadius);
+        if (!options.straightGaps) Rshift = 0;
 
         this.parts = [];
-        this.active = 0;
+        this.active = options.allowMultiple ? [0] : 0;
 
         let {x: cx, y: cy} = geometry.center;
         for (let n = 1; n <= norma.max; n++) {
@@ -47,8 +50,8 @@ export default class Zebra {
                 sav: !!options.highlightActive,
                 opt: {
                     d: this.sector(cx, cy, degStart, degEnd, innerRadius, outerRadius, Rshift),
-                    fill: options.colors.background,
-                    stroke: options.colors.border,
+                    fill: (options.colors[n - 1] || options.colors).background,
+                    stroke: (options.colors[n - 1] || options.colors).border,
                     'stroke-width': options.border
                 }
             });
@@ -59,14 +62,32 @@ export default class Zebra {
             sub: this.parts
         };
 
-        Object.assign(this, subTree, {norma, colors: options.colors});
+        Object.assign(this,
+            subTree,
+            {
+                norma,
+                colors: options.colors,
+                allowMultiple: options.allowMultiple
+            }
+        );
     }
 
     highlight(n = this.active, state = 'active') {
-        const el = this.parts[this.active]._el;
+        if (n instanceof Array) {
+            n.filter(value => value != null).forEach(value => this.highlight(value, state));
+            return;
+        }
 
-        const stroke = state === 'active' ? this.colors.activeBorder : this.colors.border;
-        const fill = state === 'active' ? this.colors.activeBackground : this.colors.background;
+        let active = n;
+        if (typeof active === 'object') n = active.value;
+        else active = {color: {}};
+
+        if (n == null || n < this.norma.min || n >= this.norma.max) return;
+
+        const el = this.parts[n]._el;
+
+        const stroke = state === 'active' ? (active.color.border || this.colors.activeBorder) : (this.colors[n] || this.colors).border;
+        const fill = state === 'active' ? (active.color.background || this.colors.activeBackground) : (this.colors[n] || this.colors).background;
 
         el.setAttributeNS(null, 'stroke', stroke);
         el.setAttributeNS(null, 'fill', fill);
@@ -88,12 +109,25 @@ export default class Zebra {
             ].join(' ');
     }
 
-    update({to: {value}}) {
+    /**
+     * @param {updValues|number|Array<number>} value
+     */
+    update(value) {
         this.highlight(this.active, 'normal');
-        if (value >= this.norma.min && value < this.norma.max) {
-            this.active = value;
-            this.highlight(this.active, 'active');
+
+        if (this.allowMultiple) {
+            if (typeof value === 'object' && !(value instanceof Array)) {
+                value = [value.to.value];
+            } else {
+                value = [value];
+            }
+        } else {
+            if (value instanceof Array) value = value[0];
+            else value = value.to.value;
         }
+
+        this.active = value;
+        this.highlight(this.active, 'active');
     }
 
     afterDraw() {}
