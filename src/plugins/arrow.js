@@ -1,4 +1,4 @@
-import {safeMerge} from '../utils.js';
+import {safeMerge, fixValue} from '../utils.js';
 
 const defaultConfig = {
     inner: true,
@@ -18,9 +18,8 @@ export default class ArrowPlugin {
         this.alpha = alpha;
 
         this.options = options = safeMerge(defaultConfig, options);
-        if (options.radius == null) {
-            options.radius = options.inner ? geometry.innerRadius : geometry.maxRadius;
-        }
+        const border = options.inner ? geometry.innerRadius : geometry.maxRadius;
+        options.radius = fixValue(options.radius, border, border);
 
         const A = {x: this.center.x, y: this.center.y - options.radius};
         const B = {x: A.x - options.sizes.width / 2, y: A.y + options.sizes.height * (options.inner ? 1 : -1)};

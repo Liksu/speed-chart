@@ -161,3 +161,12 @@ export function safeMerge(base, extra) {
 export function pickFirst(...values) {
     return values.find(item => item != null);
 }
+
+export function fixValue(value, border, ifNull = value) {
+    if (value == null) value = ifNull;
+    else {
+        if (value && Math.abs(value) < 1) value *= border;
+        if (value < 0 || Object.is(value, -0)) value += border;
+    }
+    return value;
+}
