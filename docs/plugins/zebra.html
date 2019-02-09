@@ -14,6 +14,9 @@
 </body>
 <script type="module">
     import ZebraLoader from "../../src/common/zebra-loader.js";
+    import ArrowPlugin from "../../src/plugins/arrow.js";
+
+    ZebraLoader.register('pointer', ArrowPlugin);
 
     window.zebraSkew = new ZebraLoader({
         run: false,
@@ -24,10 +27,22 @@
             margin: 1
         },
         norma: 6,
+        pushPlugins: ['pointer'],
         construct: {
             zebra: {
                 highlightActive: false,
                 straightGaps: false
+            },
+            pointer: {
+                radius: -0,
+                color: 'darkred',
+                spin: {
+                    degree: 120,
+                    around: (s, o, {A}) => ({
+                        x: A.x - 2,
+                        y: A.y - 2
+                    })
+                }
             }
         }
     });
@@ -41,10 +56,22 @@
             margin: 1
         },
         norma: 6,
+        pushPlugins: ['pointer'],
         construct: {
             zebra: {
                 highlightActive: false,
                 straightGaps: true
+            },
+            pointer: {
+                radius: -0,
+                color: 'darkred',
+                spin: {
+                    degree: 120,
+                    around: (s, o, {A}) => ({
+                        x: A.x - 2,
+                        y: A.y - 2
+                    })
+                }
             }
         }
     })

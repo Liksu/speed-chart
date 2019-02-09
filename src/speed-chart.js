@@ -1,5 +1,5 @@
 import Tree from './tree.js';
-import {merge, pickFirst} from './utils.js';
+import {merge, pickFirst, deepCopy} from './utils.js';
 window.merge = merge;
 
 // default plugins
@@ -40,6 +40,7 @@ const knownPlugins = Object.assign(['background', 'ticks', 'needle'], {
  * @property {Object.<string, string>} colors
  * @property {Object} construct
  * @property {Array<String>} plugins
+ * @property {Array<String|Object>} pushPlugins
  */
 
 /**
@@ -114,6 +115,17 @@ export default class SpeedChart {
     }
 
     /**
+     * @private
+     * @param {settings} settings - will be modified
+     */
+    static pushPluginsFix(settings) {
+        if (settings.pushPlugins && settings.pushPlugins instanceof Array) {
+            settings.plugins = [...(settings.plugins || []), ...settings.pushPlugins];
+            delete settings.pushPlugins;
+        }
+    }
+
+    /**
      * @param {Element|String} element
      * @param {Boolean} allowFragment
      * @returns {Element}
@@ -176,12 +188,13 @@ export default class SpeedChart {
 
         if (this.commonConfig) settings = merge(this.commonConfig, settings);
         settings = merge(defaultConfig, settings);
+        SpeedChart.pushPluginsFix(settings);
         Object.assign(this, {settings, element});
 
         this._value = settings.value != null ? settings.value : 0;
         this._values = {};
 
-        this.userSettings = merge({}, settings);
+        this.userSettings = deepCopy(settings);
 
         this.remake();
 
@@ -334,7 +347,8 @@ export default class SpeedChart {
     remake(newSettings) {
         if (newSettings != null) {
             this.settings = merge(this.userSettings, newSettings);
-            this.userSettings = merge({}, this.settings); // store updated userSettings
+            SpeedChart.pushPluginsFix(this.settings);
+            this.userSettings = deepCopy(this.settings); // store updated userSettings
         }
 
         this.init();
