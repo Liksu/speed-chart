@@ -5,14 +5,18 @@
     <title>ZebraPlugin</title>
     <style>
         .example {border: 1px dotted gray; padding: 1em; display: inline-block}
-        figure, figure > p {display: inline-block}
-        figure {text-align: center}
+        figure {text-align: center; display: inline-block}
+        figure > p {display: inline-block; width: 100px; height: 100px}
         figcaption {text-align: center; font-family: monospace}
-        /*.example > .speedchart-container {display: inline-block}*/
-        /*.example > .speedchart-container + .speedchart-container {margin-left: 1em}*/
+        figure + figure {margin-left: 0}
+        .code-string {font-family: monospace}
+        .clickable * {cursor: pointer}
+        label > input {display: none}
+        .switch {color: orangered; font-weight: bold}
     </style>
 </head>
 <body>
+<div>
     <div class="example">
         <figure>
             <p id="skew"></p>
@@ -23,17 +27,39 @@
             <figcaption>straightGaps: true</figcaption>
         </figure>
     </div>
+</div>
+<div>
+    <div class="example">
+        <p class="code-string clickable">
+            <label>
+                <input type="checkbox" onclick="toggleHighlight(this)" checked>
+                highlightActive: <span id="highlightStatus" class="switch">true</span>
+            </label>
+        </p>
+        <p class="code-string clickable">
+            <label>
+                <input type="checkbox" onclick="toggleRun(this)" checked>
+                run: <span id="runStatus" class="switch">true</span>
+            </label>
+        </p>
+        <p class="code-string">
+            value: <span id="value" class="value"></span>
+        </p>
+        <figure>
+            <p id="highlight"></p>
+            <figcaption></figcaption>
+        </figure>
+    </div>
+</div>
 </body>
 <script type="module">
     import ZebraLoader from "../../src/common/zebra-loader.js";
     import ArrowPlugin from "../../src/plugins/arrow.js";
-
     ZebraLoader.register('pointer', ArrowPlugin);
 
     window.zebraSkew = new ZebraLoader('#skew', {
         run: false,
         geometry: {
-            size: {width: 100, height: 100},
             innerRadius: 0.5,
             margin: 1
         },
@@ -62,7 +88,6 @@
     window.zebraStraight = new ZebraLoader('#straight', {
         run: false,
         geometry: {
-            size: {width: 100, height: 100},
             innerRadius: 0.5,
             margin: 1
         },
@@ -86,6 +111,33 @@
                 }
             }
         }
-    })
+    });
+
+    window.zebraHighlight = new ZebraLoader({
+        selector: '#highlight'
+    });
+
+    const highlightStatus = document.getElementById('highlightStatus');
+    window.toggleHighlight = function(checkbox) {
+        window.zebraHighlight.remake({
+            construct: {
+                zebra: {
+                    highlightActive: checkbox.checked
+                }
+            }
+        });
+        highlightStatus.innerText = checkbox.checked;
+    };
+
+    const runStatus = document.getElementById('runStatus');
+    window.toggleRun = function(checkbox) {
+        window.zebraHighlight[checkbox.checked ? 'start' : 'stop']();
+        runStatus.innerText = checkbox.checked;
+    };
+
+    const value = document.getElementById('value');
+    setInterval(() => {
+        value.innerText = window.zebraHighlight.value;
+    }, 100);
 </script>
 </html>
