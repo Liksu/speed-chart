@@ -138,7 +138,7 @@ export function merge(base, extra) {
     if (extra === undefined) return deepCopy(base);
     if (typeof extra !== 'object' || extra === null) return deepCopy(extra);
     if (base instanceof Array || extra instanceof Array) return deepCopy(extra);
-    if (typeof base !== typeof extra) return deepCopy(extra);
+    if (typeof base !== typeof extra || (base == null)) return deepCopy(extra);
     // else both objects
     return Object.keys(Object.assign({}, base, extra))
         .reduce((result, key) => ({...result, [key]: merge(base[key], extra[key])}), {});
