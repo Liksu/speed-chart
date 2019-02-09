@@ -7,7 +7,9 @@ const defaultConfig = {
     sizes: {
         width: 12,
         height: 18,
-        notch: 3
+        notch: 3,
+        stick: null,
+        stickWidth: 3
     },
     spin: null // {around: 'center'|'peak'|'notch'|'zero'|{x,y}, degree: number | value: number}
 };
@@ -69,15 +71,36 @@ export default class ArrowPlugin {
             }
         };
 
+        const stickLength = fixValue(options.sizes.stick, border, 0);
+        if (stickLength) {
+            this.stick = {
+                tag: 'line',
+                sav: true,
+                opt: {
+                    'stroke-width': options.sizes.stickWidth,
+                    stroke: options.color,
+                    x1: N.x,
+                    x2: N.x,
+                    y1: N.y,
+                    y2: N.y + stickLength * direction
+                }
+            };
+        }
+
         const subTree = {
             tag: 'g',
-            sub: [this.arrow]
+            sub: [
+                this.stick,
+                this.arrow
+            ]
         };
 
         Object.assign(this, subTree);
     }
 
     update({to: {degree: deg}}) {
-        this.arrow._el.setAttributeNS(null, 'transform', `rotate(${deg + this.alpha.start} ${this.center.x} ${this.center.y}) ${this.spin}`);
+        const params = [null, 'transform', `rotate(${deg + this.alpha.start} ${this.center.x} ${this.center.y}) ${this.spin}`];
+        this.arrow._el.setAttributeNS(...params);
+        if (this.stick) this.stick._el.setAttributeNS(...params);
     }
 }
