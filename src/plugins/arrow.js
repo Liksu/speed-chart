@@ -9,7 +9,7 @@ const defaultConfig = {
         height: 18,
         notch: 3
     },
-    spin: null // {around: 'center'|'peak'|'notch'|{x,y}, degree: number | value: number}
+    spin: null // {around: 'center'|'peak'|'notch'|'zero'|{x,y}, degree: number | value: number}
 };
 
 export default class ArrowPlugin {
@@ -36,18 +36,18 @@ export default class ArrowPlugin {
                 degree = (options.spin.value || 0) * speedometer.settings.norma.coefficient;
             }
 
-            let around = options.spin.around;
+            let around = options.spin.around || 'center';
             if (typeof around !== 'object') {
-                switch (around) {
-                    case 'peak': around = A; break;
-                    case 'notch': around = N; break;
-                    case 'center':
-                    default:
-                        around = {
-                            x: A.x,
-                            y: A.y + Math.abs(Math.max(B.y, N.y) - A.y) / 2 * direction
-                        };
-                }
+                if (around instanceof Function) around = around(speedometer, options, {A, B, C, N});
+                else around = {
+                    peak: A,
+                    notch: N,
+                    zero: this.center,
+                    center: {
+                        x: A.x,
+                        y: A.y + Math.abs(Math.max(B.y, N.y) - A.y) / 2 * direction
+                    }
+                }[around];
             }
 
             this.spin = `rotate(${degree} ${around.x} ${around.y})`;
