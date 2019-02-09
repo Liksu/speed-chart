@@ -16,3 +16,4 @@
 - make norma different for plugins as multiValue
 - installations monitor
 - update plugins to use global colors
+- allow prepend chart

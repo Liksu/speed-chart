@@ -4,13 +4,25 @@
     <meta charset="UTF-8">
     <title>ZebraPlugin</title>
     <style>
-        .example {border: 1px dotted gray; background-color: #eef; padding: 1em}
-        .example > .speedchart-container {display: inline-block}
-        .example > .speedchart-container + .speedchart-container {margin-left: 1em}
+        .example {border: 1px dotted gray; padding: 1em; display: inline-block}
+        figure, figure > p {display: inline-block}
+        figure {text-align: center}
+        figcaption {text-align: center; font-family: monospace}
+        /*.example > .speedchart-container {display: inline-block}*/
+        /*.example > .speedchart-container + .speedchart-container {margin-left: 1em}*/
     </style>
 </head>
 <body>
-    <div class="example"></div>
+    <div class="example">
+        <figure>
+            <p id="skew"></p>
+            <figcaption>straightGaps: false</figcaption>
+        </figure>
+        <figure>
+            <p id="straight"></p>
+            <figcaption>straightGaps: true</figcaption>
+        </figure>
+    </div>
 </body>
 <script type="module">
     import ZebraLoader from "../../src/common/zebra-loader.js";
@@ -18,9 +30,8 @@
 
     ZebraLoader.register('pointer', ArrowPlugin);
 
-    window.zebraSkew = new ZebraLoader({
+    window.zebraSkew = new ZebraLoader('#skew', {
         run: false,
-        appendTo: '.example',
         geometry: {
             size: {width: 100, height: 100},
             innerRadius: 0.5,
@@ -47,9 +58,8 @@
         }
     });
 
-    window.zebraStraight = new ZebraLoader({
+    window.zebraStraight = new ZebraLoader('#straight', {
         run: false,
-        appendTo: '.example',
         geometry: {
             size: {width: 100, height: 100},
             innerRadius: 0.5,
