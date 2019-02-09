@@ -61,7 +61,8 @@ export default class Tree {
         const treePath = path + '/' + (tree.tag || '');
         if (treePath === selector) return tree;
         if (tree.sub) {
-            return tree.sub.find(subTree => this.find(selector, subTree, treePath)) || null;
+            return tree.sub.filter(subTree => typeof subTree === 'object')
+                .find(subTree => this.find(selector, subTree, treePath)) || null;
         }
         return null;
     }
