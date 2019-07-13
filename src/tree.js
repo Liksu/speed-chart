@@ -73,7 +73,8 @@ export default class Tree {
             element = this.find(element);
         }
 
-        if (element && !subTree && element instanceof Object) {
+        // element not passed
+        if (element && subTree == null && element instanceof Object) {
             subTree = element;
             element = this.tree;
         }
