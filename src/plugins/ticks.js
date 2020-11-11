@@ -1,8 +1,8 @@
-import {tick, polar2cart} from '../utils.js';
+import {tick, polar2cart, safeMerge} from '../utils.js';
 
 export default class TicksPlugin {
-    constructor(speedometer, options) {
-        const {geometry, alpha, colors, construct: {ticks}} = speedometer.settings;
+    constructor(speedometer, options = {}) {
+        const {geometry, alpha, colors, construct: {ticks}} = safeMerge(speedometer.settings, options);
 
 // prepare inner (small) ticks
 
@@ -36,7 +36,7 @@ export default class TicksPlugin {
                 tag: 'line',
                 opt: {
                     ...tick(geometry.center.x, geometry.center.y, geometry.maxRadius - 20 - geometry.margin - 4, alpha.end - mainStepDeg * mainTicksCount, 20),
-                    stroke: '#FFFFFF',
+                    stroke: options.color || '#FFFFFF',
                     'stroke-width': 4
                 }
             });
@@ -58,11 +58,15 @@ export default class TicksPlugin {
                     y,
                     'alignment-baseline': 'middle',
                     'text-anchor': 'middle',
-                    fill: 'white',
-                    'font-size': val ? '30px' : '20px',
+                    fill: options.color || 'white',
+                    'font-size': val ? '30px' : (options.zeroTextSize || '20px'),
                     'font-family': 'sans-serif'
                 }
             });
+        }
+
+        if (options.hideText) {
+            digits.splice(0, digits.length);
         }
 
         return {

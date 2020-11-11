@@ -16,7 +16,7 @@ const defaultConfig = {
 
 export default class ArrowPlugin {
     constructor(speedometer, options) {
-        const {geometry, alpha} = speedometer.settings;
+        const {geometry, alpha} = safeMerge(speedometer.settings, options);
         this.center = geometry.center;
         this.alpha = alpha;
 

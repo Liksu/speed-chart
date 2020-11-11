@@ -1,5 +1,5 @@
 import Tree from './tree.js';
-import {merge, pickFirst, deepCopy} from './utils.js';
+import {merge, pickFirst, deepCopy, fixValue, isObject} from './utils.js';
 window.merge = merge;
 
 // default plugins
@@ -56,9 +56,10 @@ const knownPlugins = Object.assign(['background', 'ticks', 'needle'], {
  */
 
 const defaultConstruct = {
-    background: true,
-    ticks: true,
-    needle: true
+    /* wont need to always process default constructs */
+    // background: true,
+    // ticks: true,
+    // needle: true
 };
 
 
@@ -248,23 +249,7 @@ export default class SpeedChart {
 
         // calc arcs
         if (settings.alpha == null) settings.alpha = -0;
-
-        let {start, end, angle} = settings.alpha;
-        if (settings.alpha instanceof Array) {
-            [start, end] = settings.alpha;
-            angle = end - start;
-        } else if (typeof settings.alpha === 'number') {
-            angle = 360 - Math.abs(settings.alpha);
-
-            if (Object.is(settings.alpha, -0)) {
-                start = 0;
-                end = angle;
-            } else {
-                end = angle / 2;
-                start = -end;
-            }
-        }
-        settings.alpha = {start, end, angle};
+        settings.alpha = this.processAlpha();
 
         // calc value correction
         if (this._originalNorma) settings.norma = this._originalNorma;
@@ -295,27 +280,60 @@ export default class SpeedChart {
         const value = this.settings.value != null && this.settings.value;
 
         const plugins = this.settings.plugins || knownPlugins;
-        plugins.forEach(pluginName => {
+
+        // extract constructors from plugins and leave only name sequence
+        plugins.forEach((pluginName, i) => {
             if (typeof pluginName === 'object') {
                 let {name, constructor} = pluginName;
                 if (pluginName instanceof Array) [name, constructor] = pluginName;
+                if (typeof constructor === 'string') constructor = knownPlugins[constructor];
                 knownPlugins[name] = constructor;
-                pluginName = name;
+                plugins[i] = name;
             }
+        });
 
+        // try to find constructors in constructs
+        Object.entries(settings)
+            .filter(([name, config]) => config.hasOwnProperty('constructor'))
+            .forEach(([name, config]) => {
+                switch (typeof config.constructor) {
+                    case 'string':
+                        knownPlugins[name] = knownPlugins[config.constructor];
+                        break;
+                    case 'function':
+                        knownPlugins[name] = config.constructor;
+                        break;
+                }
+
+                if (!plugins.includes(name) && knownPlugins[name] instanceof Function) {
+                    plugins.push(name);
+                }
+
+                delete config.constructor;
+            });
+
+        // for final found plugins sequence
+        plugins.forEach(pluginName => {
             delete constructs[pluginName];
+
+            // set value
             if (this._values[pluginName] == null) {
                 const pluginValue = settings[pluginName] && settings[pluginName].value != null && settings[pluginName].value;
                 this._values[pluginName] = pluginValue || value || this.settings.norma.min;
             }
 
+            // get sub-tree (it is possible to place sub-tree right into constructs)
             let subTree = settings[pluginName];
             if (subTree === null) return;
 
+            this.processPluginConfig(subTree);
+
+            // but if there are constructor for this plugin, it should return new sub-tree
             if (knownPlugins[pluginName] instanceof Function) {
                 subTree = new knownPlugins[pluginName](this, settings[pluginName], pluginName);
             }
 
+            // store sub-tree into main tree
             if (subTree) {
                 if (!(subTree instanceof Array) && !subTree._id) subTree._id = pluginName;
                 this.tree.append(mainId, subTree);
@@ -323,7 +341,82 @@ export default class SpeedChart {
             }
         });
 
-        const unused = Object.keys(constructs);
+        const unusedKnownPlugins = Object.keys(constructs);
+        if (unusedKnownPlugins.length) {
+            console.warn('Unused constructs:', unusedKnownPlugins.join(', '));
+        }
+    }
+
+    processAlpha(settings = this.settings) {
+        let {start, end, angle} = settings.alpha;
+        if (settings.alpha instanceof Array) {
+            [start, end] = settings.alpha;
+            angle = end - start;
+        } else if (typeof settings.alpha === 'number') {
+            angle = 360 - Math.abs(settings.alpha);
+
+            if (Object.is(settings.alpha, -0)) {
+                start = 0;
+                end = angle;
+            } else {
+                end = angle / 2;
+                start = -end;
+            }
+        }
+
+        return {start, end, angle};
+    }
+
+    /**
+     * Fix plugins config (change values by link, inside config)
+     * @param {settings} config
+     */
+    processPluginConfig(config) {
+        if (!isObject(config)) return;
+
+        function deep(partConfig, condition, processor) {
+            const keys = Object.keys(partConfig);
+
+            // process object properties
+            keys.filter(key => condition(key, partConfig))
+                .forEach(key => processor(key, partConfig));
+
+            // go deeper
+            keys.filter(key => isObject(partConfig[key]))
+                .forEach(key => {
+                    deep(partConfig[key], condition, processor);
+                });
+        }
+
+        // fix alpha
+        deep(
+            config,
+            key => key === 'alpha$',
+            (key, partConfig) => {
+                partConfig.alpha = this.processAlpha({alpha: partConfig.alpha$});
+                delete partConfig.alpha$;
+            }
+        );
+
+        // re-calculate *$ keys depends on maxRadius
+        deep(
+            config,
+            (key, partConfig) => /\$$/.test(key) && !isObject(partConfig[key]),
+            (key, partConfig) => {
+                const fixedKey = key.replace(/\$$/, '');
+                partConfig[fixedKey] = fixValue(partConfig[key], this.settings.geometry.maxRadius);
+                delete partConfig[key];
+            }
+        );
+
+        // execute functions
+        deep(
+            config,
+            (key, partConfig) => (partConfig === config ? key !== 'update' : true) && partConfig[key] instanceof Function,
+            (key, partConfig) => {
+                partConfig[key] = partConfig[key](this.settings, config, partConfig);
+            }
+        );
     }
 
     /**
@@ -439,7 +532,15 @@ export default class SpeedChart {
      * @public
      */
     get values() {
-        return this._values;
+        if (!this._valuesProxy) {
+            this._valuesProxy = new Proxy(this._values, {
+                set: (target, name, value) => {
+                    this.values = {[name]: value};
+                }
+            });
+        }
+
+        return this._valuesProxy;
     }
 
     /**

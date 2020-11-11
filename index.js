@@ -14,6 +14,8 @@ export {default as RainbowPlugin} from './src/plugins/rainbow.js';
 export {default as RedZonePlugin} from './src/plugins/redZone.js';
 export {default as SpeedTextPlugin} from './src/plugins/speed.js';
 export {default as TicksPlugin} from './src/plugins/ticks.js';
+export {default as ArcPlugin} from './src/plugins/arc.js';
+export {default as TextPlugin} from './src/plugins/text.js';
 
 export {default as Gauge} from './src/common/gauge.js';
 export {default as Speedometer} from './src/common/speedometer.js';

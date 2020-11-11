@@ -17,3 +17,5 @@
 - installations monitor
 - update plugins to use global colors
 - allow prepend chart
+- timer
+- pomodoro timer

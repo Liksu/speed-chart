@@ -9,6 +9,7 @@ import Gauge from "../src/common/gauge.js";
 import Speedometer from "../src/common/speedometer.js";
 import Spinner from "../src/common/spinner.js";
 import ZebraLoader from "../src/common/zebra-loader.js";
+import {getClockTime} from "../src/utils.js";
 
 SpeedChart.register('rainbow', RainbowPlugin);
 SpeedChart.register('redZone', RedZonePlugin);
@@ -21,6 +22,12 @@ SpeedChart.resetPlugins([
     'needle',
     'speed',
 ]);
+// restore defaults commented in speed-chart.js
+Object.assign(SpeedChart.defaults.construct, {
+    background: true,
+    ticks: true,
+    needle: true
+});
 
 // window.speedometer = new SpeedChart({
 //     selector: '#speedometer',
@@ -105,18 +112,8 @@ window.rainbowClock = new SpeedChart({
 });
 
 setInterval(() => {
-    const now = new Date();
-    const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
-    const minutes = now.getMinutes() + seconds / 60;
-    let hours = now.getHours();
-    if (hours >= 12) hours -= 12;
-    hours = (hours + minutes / 60) * 5;
-
-    rainbowClock.update({
-        seconds,
-        minutes,
-        hours
-    });
+    const {hours, minutes, seconds} = getClockTime();
+    rainbowClock.update({hours, minutes, seconds});
 }, 60);
 
 SpeedChart.register('innerArrow', ArrowPlugin, 'store only');

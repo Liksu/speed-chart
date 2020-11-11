@@ -8,7 +8,7 @@ const defaultConfig = {
 
 export default class BackgroundPlugin {
     constructor(speedometer, options) {
-        const {geometry, alpha, colors} = speedometer.settings;
+        const {geometry, alpha, colors} = safeMerge(speedometer.settings, options);
 
         options = safeMerge(defaultConfig, {
             outer: geometry.margin,

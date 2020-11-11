@@ -170,3 +170,34 @@ export function fixValue(value, border, ifNull = value) {
     }
     return value;
 }
+
+export function getClockTime() {
+    const now = new Date();
+    const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
+    const minutes = now.getMinutes() + seconds / 60;
+    let hours = now.getHours();
+    if (hours >= 12) hours -= 12;
+    hours = (hours + minutes / 60) * 5; // 5 because we need 12 instead of 60 (60/12==5)
+
+    return {hours, minutes, seconds};
+}
+
+export function getSector({
+    degEnd,
+    degStart,
+    center: {x, y},
+    alpha: {start},
+    geometry: {innerRadius, maxRadius, margin},
+    cap
+}) {
+    return sector(
+        x, y,
+        degStart + start, degEnd + start,
+        innerRadius, maxRadius - margin,
+        (degEnd - degStart < 360) && cap
+    );
+}
+
+export function isObject(value) {
+    return Object.prototype.toString.call(value) === '[object Object]';
+}
