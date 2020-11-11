@@ -1,6 +1,5 @@
-import {AnimatedSpeedChart, TextPlugin} from "../index.js";
+import {AnimatedSpeedChart, TextPlugin, ArcsPlugin} from "../index.js";
 import {getClockTime} from "../src/utils.js";
-// import ArcsPlugin from "../src/plugins/arcs.js";
 
 const commonConfig = {
     time: {
@@ -20,7 +19,7 @@ const commonConfig = {
         {name: 'hours', constructor: 'needle'},
         {name: 'minutes', constructor: 'needle'},
         {name: 'seconds', constructor: 'needle'},
-        // {name: 'tasks', constructor: ArcsPlugin},
+        {name: 'tasks', constructor: ArcsPlugin},
         {name: 'time', constructor: 'text'},
         {name: 'date', constructor: 'text'},
     ],
@@ -60,7 +59,10 @@ const commonConfig = {
             length: 0.7,
             color: 'green',
             width: 2,
-            pin: 8
+            pin: {
+                overlap: true,
+                radius: 8
+            }
         },
         time: {
             font: {
@@ -76,18 +78,19 @@ const commonConfig = {
         },
         tasks: {
             geometry: {
-                innerRadius$: -10,
+                innerRadius$: -6,
+                margin: 2
             },
             cap: 'round',
-            arcs: [
+            value: [
                 {to: 18},
                 {from: 30, to: 45},
                 {
                     color: 'red',
-                    cap: null,
                     geometry: {
-                        innerRadius$: -20,
-                        maxRadius$: -15
+                        innerRadius$: -12,
+                        maxRadius$: -8,
+                        margin: 0
                     },
                     value: {from: 35, to: 55}
                 }

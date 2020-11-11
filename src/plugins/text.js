@@ -113,7 +113,7 @@ export default class TextPlugin {
     }
 
     interpolate(text, data = {}) {
-        text = text.replace(/{{(\w*?)}}/g, (_, key) => data[key]);
+        text = text.replace(/{{(\w*?)}}/g, (_, key) => data[key] != null ? data[key] : '');
         if (/\n/.test(text)) {
             let multiplayer = 0;
             text = text.split('\n').map(str => {

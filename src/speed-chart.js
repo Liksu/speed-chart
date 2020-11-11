@@ -1,6 +1,6 @@
 import Tree from './tree.js';
 import {merge, pickFirst, deepCopy, fixValue, isObject} from './utils.js';
-window.merge = merge;
+// window.merge = merge;
 
 // default plugins
 import BackgroundPlugin from './plugins/background.js'
@@ -382,7 +382,7 @@ export default class SpeedChart {
                 .forEach(key => processor(key, partConfig));
 
             // go deeper
-            keys.filter(key => isObject(partConfig[key]))
+            keys.filter(key => isObject(partConfig[key]) || partConfig[key] instanceof Array)
                 .forEach(key => {
                     deep(partConfig[key], condition, processor);
                 });
@@ -475,14 +475,15 @@ export default class SpeedChart {
      * @param {number|Array<number>|updValues} newValue - in case of array - [to, from] order
      * @returns {updValues|null}
      */
-    makeUpdValue(newValue = 0) {
+    makeUpdValue(newValue = 0, originalValue = newValue) {
+        const _originalValue = deepCopy(originalValue);
         let to = pickFirst(newValue.to, newValue[0], newValue, this.settings.norma.min, 0);
         let from = pickFirst(newValue.from, newValue[1], this.settings.norma.min, 0);
 
         if (to.degree == null) to = this.translate(pickFirst(to.value, to));
         if (from.degree == null) from = this.translate(pickFirst(from.value, from));
 
-        const updValues = {from, to};
+        const updValues = {from, to, _originalValue};
         if (typeof newValue === 'object') Object.assign(newValue, updValues);
         else newValue = updValues;
 
@@ -552,7 +553,10 @@ export default class SpeedChart {
             this._values[key] = value;
             const sub = this.tree.find(key);
             if (sub && sub.update) {
-                const updValue = this.makeUpdValue(value);
+                const updValue = value instanceof Array
+                    ? value.map(item => this.makeUpdValue(item && item.value || item, item))
+                    : this.makeUpdValue(value);
+
                 sub.update(updValue);
             }
         });

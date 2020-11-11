@@ -56,6 +56,17 @@ export default class Tree {
         return el;
     }
 
+    recompile(node = this.tree) {
+        if (!node._el) {
+            console.error('Trying to recompile node without stored element');
+            return;
+        }
+
+        const parent = node._el.parentElement;
+        node._el.remove();
+        return this.compile(node, parent);
+    }
+
     find(selector, tree = this.tree, path = '') {
         if (tree._id == selector) return tree;
         const treePath = path + '/' + (tree.tag || '');
