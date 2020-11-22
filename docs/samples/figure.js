@@ -1,4 +1,4 @@
-import {GaugePlugin, TextPlugin, SpeedChart, ArrowPlugin, ArcPlugin} from "../index.js";
+import {GaugePlugin, TextPlugin, SpeedChart, ArrowPlugin, ArcPlugin} from "../../index.js";
 
 const arcRadius = 0.56;
 

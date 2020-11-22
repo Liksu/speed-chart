@@ -40,4 +40,8 @@ export default class AnimatedSpeedChart extends SpeedChart {
         this.animationLastRunTime = timestamp;
         this.step(timestamp);
     }
+
+    get isRun() {
+        return this.settings.run;
+    }
 }
