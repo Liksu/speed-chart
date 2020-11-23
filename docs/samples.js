@@ -33,7 +33,7 @@ Object.assign(SpeedChart.defaults.construct, {
 // window.speedometer = new SpeedChart({
 //     selector: '#speedometer',
 //     alpha: 110,
-//     norma: ({construct: {ticks}}) => ticks.max,
+//     norma$: ({construct: {ticks}}) => ticks.max,
 //     construct: {
 //         speed: {text: 'km/h'},
 //         ticks: {

@@ -404,7 +404,7 @@ export default class SpeedChart {
         // re-calculate *$ keys depends on maxRadius
         deep(
             config,
-            (key, partConfig) => /\$$/.test(key) && !isObject(partConfig[key]),
+            (key, partConfig) => /\$$/.test(key) && !isObject(partConfig[key]) && !(partConfig[key] instanceof Function),
             (key, partConfig) => {
                 const fixedKey = key.replace(/\$$/, '');
                 partConfig[fixedKey] = fixValue(partConfig[key], this.settings.geometry.maxRadius);
@@ -415,9 +415,11 @@ export default class SpeedChart {
         // execute functions
         deep(
             config,
-            (key, partConfig) => (partConfig === config ? key !== 'update' : true) && partConfig[key] instanceof Function,
+            (key, partConfig) => /\$$/.test(key) && partConfig[key] instanceof Function,
             (key, partConfig) => {
-                partConfig[key] = partConfig[key](this.settings, config, partConfig);
+                const fixedKey = key.replace(/\$$/, '');
+                partConfig[fixedKey] = partConfig[key](this.settings, config, partConfig);
+                delete partConfig[key];
             }
         );
     }

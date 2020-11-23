@@ -21,7 +21,7 @@ const commonConfig = {
             text: '00:00:00.00',
             font: {
                 color: 'black',
-                size: ({geometry: {size: {width}}}) => Math.round(width * 0.14)
+                size$: ({geometry: {size: {width}}}) => Math.round(width * 0.14)
             }
         },
         backArc: {

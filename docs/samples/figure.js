@@ -58,7 +58,7 @@ const commonConfig = {
             },
             spin: {
                 around: 'peak',
-                degree: ({geometry: {maxRadius}}, {sizes: {height}}) => {
+                degree$: ({geometry: {maxRadius}}, {sizes: {height}}) => {
                     const rad = height / (2 * maxRadius);
                     return Math.acos(rad) * 180 / Math.PI - 1;
                 }
@@ -77,7 +77,7 @@ const commonConfig = {
             },
             spin: {
                 around: 'peak',
-                degree: ({geometry: {maxRadius}}, {sizes: {height}}) => {
+                degree$: ({geometry: {maxRadius}}, {sizes: {height}}) => {
                     const rad = height / (2 * maxRadius);
                     return -Math.acos(rad) * 180 / Math.PI + 1;
                 }
@@ -87,8 +87,8 @@ const commonConfig = {
         subTreeExample: {
             tag: 'rect',
             opt: {
-                x: globalSettings => globalSettings.geometry.center.x - 50,
-                y: globalSettings => globalSettings.geometry.center.y - 50,
+                x$: globalSettings => globalSettings.geometry.center.x - 50,
+                y$: globalSettings => globalSettings.geometry.center.y - 50,
                 width: 100,
                 height: 100,
                 fill: 'green'
@@ -101,7 +101,7 @@ const commonConfig = {
         text: {
             geometry: {
                 center: {
-                    y: (globalSettings, pluginConfig, partConfig) => {
+                    y$: (globalSettings, pluginConfig, partConfig) => {
                         return globalSettings.geometry.center.y + globalSettings.geometry.maxRadius * (arcRadius + 0.15)
                     }
                 }
