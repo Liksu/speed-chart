@@ -56,26 +56,54 @@ export default class Tree {
         return el;
     }
 
-    recompile(node = this.tree) {
-        if (!node._el) {
+    recompile(oldNode = this.tree, newNode = oldNode) {
+        if (!oldNode._el) {
             console.error('Trying to recompile node without stored element');
             return;
         }
 
-        const parent = node._el.parentElement;
-        node._el.remove();
-        return this.compile(node, parent);
+        const oldElement = oldNode._el;
+        const newElement = this.compile(newNode);
+        return oldElement.parentElement.replaceChild(newElement, oldElement);
     }
 
+    /**
+     * works not really correct, need rework
+     * has issue with returning found value from deep like '/main/hours/line', will return hours node instead of line
+     * has issue with partial selectors like 'hours/line' instead of full '/main/hours/line'
+     * best usage for now is to find plugin by id
+     *
+     * @param selector - id of node or path from root like '/main/...', if node has _id it will be used to compare with selector, otherwise - tag
+     * @param [tree]
+     * @param [path]
+     * @returns {null|{}}
+     */
     find(selector, tree = this.tree, path = '') {
         if (tree._id == selector) return tree;
-        const treePath = path + '/' + (tree.tag || '');
+        const treePath = path + '/' + (tree._id || tree.tag || '');
         if (treePath === selector) return tree;
         if (tree.sub) {
             return tree.sub.filter(subTree => typeof subTree === 'object')
                 .find(subTree => this.find(selector, subTree, treePath)) || null;
         }
         return null;
+    }
+
+    /**
+     * init code, not finished
+     * should return tree node by xpath
+     *
+     * @param selector
+     * @param tree
+     * @returns {*[]|*|{}}
+     */
+    q(selector, tree = this.tree) {
+        if (tree._id == selector) return tree;
+        if (this._cache[selector]) return this._cache[selector][0];
+        const path = String(selector).split('/');
+        const catches = path.map(value => this._cache[value]);
+        //catches.reduce(() => {}, );
+        return catches;
     }
 
     append(element, subTree, before = false) {

@@ -477,6 +477,9 @@ export default class SpeedChart {
      */
     makeUpdValue(newValue = 0, originalValue = newValue) {
         const _originalValue = deepCopy(originalValue);
+        if (isObject(newValue)) this.processPluginConfig(newValue);
+        if (isObject(_originalValue)) this.processPluginConfig(_originalValue);
+
         let to = pickFirst(newValue.to, newValue[0], newValue, this.settings.norma.min, 0);
         let from = pickFirst(newValue.from, newValue[1], this.settings.norma.min, 0);
 
