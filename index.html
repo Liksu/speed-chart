@@ -15,6 +15,10 @@
     <div id="common-zebra-blue" style="width: 120px; height: 120px"></div>
     <div id="common-zebra-green" style="width: 120px; height: 120px"></div>
     <div id="common-zebra-tail" style="width: 120px; height: 120px"></div>
+    <div class="timer-wrapper">
+        <p id="timer-label">click to restart:</p>
+        <div id="timer" style="width: 120px; height: 120px"></div>
+    </div>
 
     <script src="docs/samples.js" type="module"></script>
     <style>
@@ -23,6 +27,19 @@
             background-image: linear-gradient(45deg, #cccccc 25%, transparent 25%), linear-gradient(-45deg, #cccccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #cccccc 75%), linear-gradient(-45deg, transparent 75%, #cccccc 75%);
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .timer-wrapper {
+            margin-top: -1em;
+        }
+        .timer-wrapper p {
+            text-align: center;
+            color: silver;
+            line-height: 0.5em;
+            margin: 0 0 4px 0;
+            display: none;
+        }
+        #timer {
+            cursor: pointer;
         }
     </style>
 </body>

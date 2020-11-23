@@ -1,4 +1,4 @@
-import Timer from "../../src/common/timer.js";
+import {Timer} from "../../index.js";
 
 let [hours, minutes, seconds] = [0, 1, 0];
 

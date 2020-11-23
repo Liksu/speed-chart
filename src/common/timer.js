@@ -58,7 +58,9 @@ export default class Timer extends AnimatedSpeedChart {
                 });
         }
 
-        this.beforeStart();
+        if (!this.settings.run) {
+            this.beforeStart();
+        }
     }
 
     get commonConfig() {
@@ -69,7 +71,6 @@ export default class Timer extends AnimatedSpeedChart {
         delete this.fin;
         delete this.dif;
         this.values = {
-            // arc: this.settings.norma.max,
             time: {value: this.toTime(this.settings.ms)}
         };
     }
@@ -125,11 +126,19 @@ export default class Timer extends AnimatedSpeedChart {
         return time;
     }
 
+    /**
+     * Set new time
+     * @param {number} newValue - new time in ms
+     */
     set value(newValue) {
         this.settings.ms = newValue;
         super.value = newValue;
         this.beforeStart();
         if (this.isRun) this.start();
+    }
+
+    restart() {
+        this.start();
     }
 
     /**

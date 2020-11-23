@@ -1,6 +1,6 @@
 {
   "name": "speed-chart",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Base to create different measure charts easily",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,10 @@
     "speedometer",
     "svg",
     "chart",
-    "gauge"
+    "gauge",
+    "timer",
+    "clock",
+    "spinner"
   ],
   "author": "Petro Borshchahivskyi",
   "license": "ISC",

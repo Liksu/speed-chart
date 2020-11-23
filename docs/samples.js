@@ -10,6 +10,7 @@ import Speedometer from "../src/common/speedometer.js";
 import Spinner from "../src/common/spinner.js";
 import ZebraLoader from "../src/common/zebra-loader.js";
 import {clearObject, getClockTime} from "../src/utils.js";
+import Timer from "../src/common/timer.js";
 
 SpeedChart.register('rainbow', RainbowPlugin);
 SpeedChart.register('redZone', RedZonePlugin);
@@ -316,3 +317,14 @@ window.zebraTail = new ZebraLoader('#common-zebra-tail', {
         }
     }
 });
+
+window.timer = new Timer({
+    selector: '#timer',
+    ms: 60000,
+    showMilliseconds: false,
+    run: true
+});
+
+window.timer.finish = () => {
+    document.getElementById('timer-label').style.display = 'block';
+}

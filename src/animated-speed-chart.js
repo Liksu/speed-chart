@@ -4,7 +4,7 @@ export default class AnimatedSpeedChart extends SpeedChart {
     constructor(...params) {
         super(...params);
         this.animationLastRunTime = 0;
-        if (this.settings.run) this.nextStep();
+        if (this.settings.run) this.start();
     }
 
     start() {
