@@ -1,6 +1,74 @@
 import {GaugePlugin, TextPlugin, SpeedChart, ArrowPlugin, ArcPlugin} from "../../index.js";
+import {safeMerge} from "../../src/utils.js";
 
 const arcRadius = 0.56;
+
+const themes = {
+    black: {
+        construct: {
+            background: {
+                alpha$: 120,
+                border: true
+            },
+            ticks: {
+                color: 'white',
+                innerTicks: {
+                    color: '#D3D3D3'
+                }
+            },
+            alpha: {
+                color: '#e68987CC',
+                bgColor: '#00000000',
+            },
+            arc: {
+                color: '#5940d9'
+            },
+            leftArrow: {
+                color: '#5940d9'
+            },
+            rightArrow: {
+                color: '#5940d9'
+            },
+            text: {
+                font: {
+                    color: '#5940d9'
+                }
+            }
+        }
+    },
+    white: {
+        construct: {
+            background: {
+                alpha$: 126,
+                border: false
+            },
+            ticks: {
+                color: '#00008066',
+                innerTicks: {
+                    color: '#00008048'
+                }
+            },
+            alpha: {
+                color: '#e68987',
+                bgColor: '#cccccc'
+            },
+            arc: {
+                color: 'white'
+            },
+            leftArrow: {
+                color: 'white'
+            },
+            rightArrow: {
+                color: 'white'
+            },
+            text: {
+                font: {
+                    color: 'white'
+                }
+            }
+        }
+    }
+};
 
 const commonConfig = {
     plugins: [
@@ -117,6 +185,12 @@ const commonConfig = {
 class Figure extends SpeedChart {
     get commonConfig() {
         return commonConfig;
+    }
+
+    setTheme(name = 'white') {
+        if (themes.hasOwnProperty(name)) {
+            this.remake(safeMerge(this.settings, themes[name]));
+        }
     }
 }
 
