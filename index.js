@@ -21,4 +21,5 @@ export {default as TextPlugin} from './src/plugins/text.js';
 export {default as Gauge} from './src/common/gauge.js';
 export {default as Speedometer} from './src/common/speedometer.js';
 export {default as Spinner} from './src/common/spinner.js';
+export {default as ZebraLoader} from './src/common/zebra-loader.js';
 export {default as Timer} from './src/common/timer.js';

@@ -1,4 +1,6 @@
-import {AnimatedSpeedChart, TextPlugin, ArcPlugin} from "../../index.js";
+import TextPlugin from "../plugins/text.js";
+import ArcPlugin from "../plugins/arc.js";
+import AnimatedSpeedChart from "../animated-speed-chart.js";
 
 const commonConfig = {
     run: false,
