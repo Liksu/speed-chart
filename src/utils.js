@@ -201,3 +201,11 @@ export function getSector({
 export function isObject(value) {
     return Object.prototype.toString.call(value) === '[object Object]';
 }
+
+export function clearObject(object) {
+    const properties = Object.getOwnPropertyNames(object);
+    let i = properties.length;
+    while (i--) {
+        delete object[properties[i]];
+    }
+}

@@ -184,6 +184,7 @@ export default class SpeedChart {
      */
     constructor(element, settings) {
         const fixed = SpeedChart.fixParameters(element, settings);
+        if (!fixed.settings.selector && String(element) === element) fixed.settings.selector = element;
         settings = fixed.settings;
         element = fixed.element;
 
@@ -343,7 +344,9 @@ export default class SpeedChart {
 
         const unusedKnownPlugins = Object.keys(constructs);
         if (unusedKnownPlugins.length) {
-            console.warn('Unused constructs:', unusedKnownPlugins.join(', '));
+            let name = this.constructor.name;
+            if (this.settings.selector) name += ' ' + this.settings.selector;
+            console.warn(`${name} contains unused constructs:`, unusedKnownPlugins.join(', '));
         }
     }
 

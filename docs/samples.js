@@ -9,7 +9,7 @@ import Gauge from "../src/common/gauge.js";
 import Speedometer from "../src/common/speedometer.js";
 import Spinner from "../src/common/spinner.js";
 import ZebraLoader from "../src/common/zebra-loader.js";
-import {getClockTime} from "../src/utils.js";
+import {clearObject, getClockTime} from "../src/utils.js";
 
 SpeedChart.register('rainbow', RainbowPlugin);
 SpeedChart.register('redZone', RedZonePlugin);
@@ -289,6 +289,10 @@ window.zebraGreen = new ZebraLoader('#common-zebra-green', {
         }
     }
 });
+
+SpeedChart.resetPlugins(['zebra']);
+clearObject(SpeedChart.defaults.construct);
+
 window.zebraTail = new ZebraLoader('#common-zebra-tail', {
     value: [
         {value: 1, color: {border: '#ffd200', background: '#ffd200'}},
