@@ -1,16 +1,18 @@
-import SpeedChart from '../src/speed-chart.js';
-import RainbowPlugin from "../src/plugins/rainbow.js";
-import RedZonePlugin from "../src/plugins/redZone.js";
-import SpeedTextPlugin from '../src/plugins/speed.js';
-import NeedlePlugin from '../src/plugins/needle.js';
-import ArrowPlugin from "../src/plugins/arrow.js";
-import MaskPlugin from "../src/plugins/mask.js";
-import Gauge from "../src/common/gauge.js";
-import Speedometer from "../src/common/speedometer.js";
-import Spinner from "../src/common/spinner.js";
-import ZebraLoader from "../src/common/zebra-loader.js";
-import {clearObject, getClockTime} from "../src/utils.js";
-import Timer from "../src/common/timer.js";
+import {SpeedChart} from '../bundle.js';
+import {RainbowPlugin} from "../bundle.js";
+import {RedZonePlugin} from "../bundle.js";
+import {SpeedTextPlugin} from '../bundle.js';
+import {NeedlePlugin} from '../bundle.js';
+import {ArrowPlugin} from "../bundle.js";
+import {MaskPlugin} from "../bundle.js";
+import {Gauge} from "../bundle.js";
+import {Speedometer} from "../bundle.js";
+import {Spinner} from "../bundle.js";
+import {ZebraLoader} from "../bundle.js";
+import {chartUtils} from "../bundle.js";
+import {Timer} from "../bundle.js";
+
+const {clearObject, getClockTime} = chartUtils;
 
 SpeedChart.register('rainbow', RainbowPlugin);
 SpeedChart.register('redZone', RedZonePlugin);

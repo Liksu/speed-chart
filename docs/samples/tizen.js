@@ -1,5 +1,6 @@
-import {AnimatedSpeedChart, TextPlugin, ArcsPlugin} from "../../index.js";
-import {getClockTime} from "../../src/utils.js";
+import {AnimatedSpeedChart, TextPlugin, ArcsPlugin, chartUtils} from "../bundle.js";
+const {getClockTime} = chartUtils;
+
 
 const commonConfig = {
     time: {

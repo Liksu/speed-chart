@@ -1,10 +1,16 @@
 {
   "name": "speed-chart",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Base to create different measure charts easily",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "rollup index.js --file docs/bundle.js --format esm",
+    "prepare": "npm run bundle"
+  },
+  "devDependencies": {
+    "rollup": "^2.33.3",
+    "docsify": "^4.11.6"
   },
   "repository": {
     "type": "git",

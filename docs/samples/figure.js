@@ -1,5 +1,6 @@
-import {GaugePlugin, TextPlugin, SpeedChart, ArrowPlugin, ArcPlugin} from "../../index.js";
-import {safeMerge} from "../../src/utils.js";
+import {GaugePlugin, TextPlugin, SpeedChart, ArrowPlugin, ArcPlugin} from "../bundle.js";
+import {chartUtils} from "../bundle.js";
+const {safeMerge} = chartUtils;
 
 const arcRadius = 0.56;
 

@@ -1,4 +1,4 @@
-import {Timer} from "../../index.js";
+import {Timer} from "../bundle.js";
 
 let [hours, minutes, seconds] = [0, 1, 0];
 
